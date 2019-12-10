@@ -9,15 +9,21 @@ type Complex64 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Complex64 to json
+// MakeComplex64 converts complex64 to Complex64
+func MakeComplex64(value complex64) Complex64 {
+	return Complex64{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Complex64 to json
 func (o Complex64) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Complex64 from json
+// UnmarshalJSON unmarshals Complex64 from json
 func (o *Complex64) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

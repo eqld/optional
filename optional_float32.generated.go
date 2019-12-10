@@ -9,15 +9,21 @@ type Float32 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Float32 to json
+// MakeFloat32 converts float32 to Float32
+func MakeFloat32(value float32) Float32 {
+	return Float32{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Float32 to json
 func (o Float32) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Float32 from json
+// UnmarshalJSON unmarshals Float32 from json
 func (o *Float32) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

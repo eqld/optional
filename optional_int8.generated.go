@@ -9,15 +9,21 @@ type Int8 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Int8 to json
+// MakeInt8 converts int8 to Int8
+func MakeInt8(value int8) Int8 {
+	return Int8{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Int8 to json
 func (o Int8) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Int8 from json
+// UnmarshalJSON unmarshals Int8 from json
 func (o *Int8) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

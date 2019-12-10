@@ -9,15 +9,21 @@ type String struct {
 	Present bool
 }
 
-// MarshalJSON marshalls String to json
+// MakeString converts string to String
+func MakeString(value string) String {
+	return String{Value: value, Present: true}
+}
+
+// MarshalJSON marshals String to json
 func (o String) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls String from json
+// UnmarshalJSON unmarshals String from json
 func (o *String) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

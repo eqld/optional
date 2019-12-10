@@ -9,15 +9,21 @@ type Rune struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Rune to json
+// MakeRune converts rune to Rune
+func MakeRune(value rune) Rune {
+	return Rune{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Rune to json
 func (o Rune) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Rune from json
+// UnmarshalJSON unmarshals Rune from json
 func (o *Rune) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

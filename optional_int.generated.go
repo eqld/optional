@@ -9,15 +9,21 @@ type Int struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Int to json
+// MakeInt converts int to Int
+func MakeInt(value int) Int {
+	return Int{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Int to json
 func (o Int) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Int from json
+// UnmarshalJSON unmarshals Int from json
 func (o *Int) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

@@ -9,15 +9,21 @@ type Byte struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Byte to json
+// MakeByte converts byte to Byte
+func MakeByte(value byte) Byte {
+	return Byte{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Byte to json
 func (o Byte) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Byte from json
+// UnmarshalJSON unmarshals Byte from json
 func (o *Byte) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

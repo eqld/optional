@@ -9,15 +9,21 @@ type Int32 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Int32 to json
+// MakeInt32 converts int32 to Int32
+func MakeInt32(value int32) Int32 {
+	return Int32{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Int32 to json
 func (o Int32) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Int32 from json
+// UnmarshalJSON unmarshals Int32 from json
 func (o *Int32) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

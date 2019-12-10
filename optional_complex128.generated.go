@@ -9,15 +9,21 @@ type Complex128 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Complex128 to json
+// MakeComplex128 converts complex128 to Complex128
+func MakeComplex128(value complex128) Complex128 {
+	return Complex128{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Complex128 to json
 func (o Complex128) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Complex128 from json
+// UnmarshalJSON unmarshals Complex128 from json
 func (o *Complex128) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

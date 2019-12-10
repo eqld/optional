@@ -9,15 +9,21 @@ type Bool struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Bool to json
+// MakeBool converts bool to Bool
+func MakeBool(value bool) Bool {
+	return Bool{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Bool to json
 func (o Bool) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Bool from json
+// UnmarshalJSON unmarshals Bool from json
 func (o *Bool) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

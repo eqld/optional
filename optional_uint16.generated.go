@@ -9,15 +9,21 @@ type Uint16 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Uint16 to json
+// MakeUint16 converts uint16 to Uint16
+func MakeUint16(value uint16) Uint16 {
+	return Uint16{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Uint16 to json
 func (o Uint16) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Uint16 from json
+// UnmarshalJSON unmarshals Uint16 from json
 func (o *Uint16) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

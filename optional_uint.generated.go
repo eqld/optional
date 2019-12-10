@@ -9,15 +9,21 @@ type Uint struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Uint to json
+// MakeUint converts uint to Uint
+func MakeUint(value uint) Uint {
+	return Uint{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Uint to json
 func (o Uint) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Uint from json
+// UnmarshalJSON unmarshals Uint from json
 func (o *Uint) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

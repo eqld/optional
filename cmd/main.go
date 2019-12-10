@@ -29,6 +29,7 @@ func parse(dir, file, line string) (string, bool) {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
 	ln, err := strconv.Atoi(line)
 	if err != nil {
@@ -40,7 +41,7 @@ func parse(dir, file, line string) (string, bool) {
 		s.Scan()
 	}
 
-	l := strings.SplitN(strings.TrimSpace(s.Text()), " ", 3)
+	l := strings.Fields(s.Text())
 
 	if l[0] == "type" {
 		return l[1], true
@@ -63,8 +64,9 @@ func generate(dir, pkg, t string) {
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
-	_, err = f.WriteString(strings.NewReplacer("_P_", pkg, "_TO_", to, "_T_", t).Replace(template))
+	_, err = f.WriteString(strings.NewReplacer("_PKG_", pkg, "_TO_", to, "_T_", t).Replace(template))
 	if err != nil {
 		panic(err)
 	}

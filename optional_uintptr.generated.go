@@ -9,15 +9,21 @@ type Uintptr struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Uintptr to json
+// MakeUintptr converts uintptr to Uintptr
+func MakeUintptr(value uintptr) Uintptr {
+	return Uintptr{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Uintptr to json
 func (o Uintptr) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Uintptr from json
+// UnmarshalJSON unmarshals Uintptr from json
 func (o *Uintptr) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

@@ -9,15 +9,21 @@ type Uint64 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Uint64 to json
+// MakeUint64 converts uint64 to Uint64
+func MakeUint64(value uint64) Uint64 {
+	return Uint64{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Uint64 to json
 func (o Uint64) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Uint64 from json
+// UnmarshalJSON unmarshals Uint64 from json
 func (o *Uint64) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil

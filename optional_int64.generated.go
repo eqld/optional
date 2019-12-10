@@ -9,15 +9,21 @@ type Int64 struct {
 	Present bool
 }
 
-// MarshalJSON marshalls Int64 to json
+// MakeInt64 converts int64 to Int64
+func MakeInt64(value int64) Int64 {
+	return Int64{Value: value, Present: true}
+}
+
+// MarshalJSON marshals Int64 to json
 func (o Int64) MarshalJSON() ([]byte, error) {
 	if !o.Present {
 		return []byte("null"), nil
 	}
+
 	return json.Marshal(o.Value)
 }
 
-// UnmarshalJSON unmarshalls Int64 from json
+// UnmarshalJSON unmarshals Int64 from json
 func (o *Int64) UnmarshalJSON(data []byte) error {
 	if len(data) == 4 && string(data) == "null" {
 		return nil
