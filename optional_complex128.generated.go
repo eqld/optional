@@ -14,6 +14,35 @@ func MakeComplex128(value complex128) Complex128 {
 	return Complex128{Value: value, Present: true}
 }
 
+// MakeComplex128FromPtr converts a pointer to complex128 to Complex128
+func MakeComplex128FromPtr(ptr *complex128) Complex128 {
+	if ptr == nil {
+		return Complex128{}
+	}
+
+	return MakeComplex128(*ptr)
+}
+
+// SafeValue safely converts Complex128 to complex128 returning its default value if the value of Complex128 is not present
+func (o Complex128) SafeValue() (value complex128) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Complex128 to a pointer to complex128 returning nil pointer if the value of Complex128 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Complex128
+func (o Complex128) SafePtr() (ptr *complex128) {
+	if o.Present {
+		ptr = new(complex128)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Complex128 to json
 func (o Complex128) MarshalJSON() ([]byte, error) {
 	if !o.Present {

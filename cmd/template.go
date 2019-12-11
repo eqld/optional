@@ -16,6 +16,35 @@ func Make_TO_(value _T_) _TO_ {
 	return _TO_{Value: value, Present: true}
 }
 
+// Make_TO_FromPtr converts a pointer to _T_ to _TO_
+func Make_TO_FromPtr(ptr *_T_) _TO_ {
+	if ptr == nil {
+		return _TO_{}
+	}
+
+	return Make_TO_(*ptr)
+}
+
+// SafeValue safely converts _TO_ to _T_ returning its default value if the value of _TO_ is not present
+func (o _TO_) SafeValue() (value _T_) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts _TO_ to a pointer to _T_ returning nil pointer if the value of _TO_ is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of _TO_
+func (o _TO_) SafePtr() (ptr *_T_) {
+	if o.Present {
+		ptr = new(_T_)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals _TO_ to json
 func (o _TO_) MarshalJSON() ([]byte, error) {
 	if !o.Present {

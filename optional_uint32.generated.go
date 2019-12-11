@@ -14,6 +14,35 @@ func MakeUint32(value uint32) Uint32 {
 	return Uint32{Value: value, Present: true}
 }
 
+// MakeUint32FromPtr converts a pointer to uint32 to Uint32
+func MakeUint32FromPtr(ptr *uint32) Uint32 {
+	if ptr == nil {
+		return Uint32{}
+	}
+
+	return MakeUint32(*ptr)
+}
+
+// SafeValue safely converts Uint32 to uint32 returning its default value if the value of Uint32 is not present
+func (o Uint32) SafeValue() (value uint32) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Uint32 to a pointer to uint32 returning nil pointer if the value of Uint32 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Uint32
+func (o Uint32) SafePtr() (ptr *uint32) {
+	if o.Present {
+		ptr = new(uint32)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Uint32 to json
 func (o Uint32) MarshalJSON() ([]byte, error) {
 	if !o.Present {

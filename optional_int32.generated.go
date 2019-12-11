@@ -14,6 +14,35 @@ func MakeInt32(value int32) Int32 {
 	return Int32{Value: value, Present: true}
 }
 
+// MakeInt32FromPtr converts a pointer to int32 to Int32
+func MakeInt32FromPtr(ptr *int32) Int32 {
+	if ptr == nil {
+		return Int32{}
+	}
+
+	return MakeInt32(*ptr)
+}
+
+// SafeValue safely converts Int32 to int32 returning its default value if the value of Int32 is not present
+func (o Int32) SafeValue() (value int32) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Int32 to a pointer to int32 returning nil pointer if the value of Int32 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Int32
+func (o Int32) SafePtr() (ptr *int32) {
+	if o.Present {
+		ptr = new(int32)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Int32 to json
 func (o Int32) MarshalJSON() ([]byte, error) {
 	if !o.Present {

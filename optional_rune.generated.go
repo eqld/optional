@@ -14,6 +14,35 @@ func MakeRune(value rune) Rune {
 	return Rune{Value: value, Present: true}
 }
 
+// MakeRuneFromPtr converts a pointer to rune to Rune
+func MakeRuneFromPtr(ptr *rune) Rune {
+	if ptr == nil {
+		return Rune{}
+	}
+
+	return MakeRune(*ptr)
+}
+
+// SafeValue safely converts Rune to rune returning its default value if the value of Rune is not present
+func (o Rune) SafeValue() (value rune) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Rune to a pointer to rune returning nil pointer if the value of Rune is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Rune
+func (o Rune) SafePtr() (ptr *rune) {
+	if o.Present {
+		ptr = new(rune)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Rune to json
 func (o Rune) MarshalJSON() ([]byte, error) {
 	if !o.Present {

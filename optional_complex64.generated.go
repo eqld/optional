@@ -14,6 +14,35 @@ func MakeComplex64(value complex64) Complex64 {
 	return Complex64{Value: value, Present: true}
 }
 
+// MakeComplex64FromPtr converts a pointer to complex64 to Complex64
+func MakeComplex64FromPtr(ptr *complex64) Complex64 {
+	if ptr == nil {
+		return Complex64{}
+	}
+
+	return MakeComplex64(*ptr)
+}
+
+// SafeValue safely converts Complex64 to complex64 returning its default value if the value of Complex64 is not present
+func (o Complex64) SafeValue() (value complex64) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Complex64 to a pointer to complex64 returning nil pointer if the value of Complex64 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Complex64
+func (o Complex64) SafePtr() (ptr *complex64) {
+	if o.Present {
+		ptr = new(complex64)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Complex64 to json
 func (o Complex64) MarshalJSON() ([]byte, error) {
 	if !o.Present {

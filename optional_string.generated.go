@@ -14,6 +14,35 @@ func MakeString(value string) String {
 	return String{Value: value, Present: true}
 }
 
+// MakeStringFromPtr converts a pointer to string to String
+func MakeStringFromPtr(ptr *string) String {
+	if ptr == nil {
+		return String{}
+	}
+
+	return MakeString(*ptr)
+}
+
+// SafeValue safely converts String to string returning its default value if the value of String is not present
+func (o String) SafeValue() (value string) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts String to a pointer to string returning nil pointer if the value of String is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of String
+func (o String) SafePtr() (ptr *string) {
+	if o.Present {
+		ptr = new(string)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals String to json
 func (o String) MarshalJSON() ([]byte, error) {
 	if !o.Present {

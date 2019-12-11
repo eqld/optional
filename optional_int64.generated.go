@@ -14,6 +14,35 @@ func MakeInt64(value int64) Int64 {
 	return Int64{Value: value, Present: true}
 }
 
+// MakeInt64FromPtr converts a pointer to int64 to Int64
+func MakeInt64FromPtr(ptr *int64) Int64 {
+	if ptr == nil {
+		return Int64{}
+	}
+
+	return MakeInt64(*ptr)
+}
+
+// SafeValue safely converts Int64 to int64 returning its default value if the value of Int64 is not present
+func (o Int64) SafeValue() (value int64) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Int64 to a pointer to int64 returning nil pointer if the value of Int64 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Int64
+func (o Int64) SafePtr() (ptr *int64) {
+	if o.Present {
+		ptr = new(int64)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Int64 to json
 func (o Int64) MarshalJSON() ([]byte, error) {
 	if !o.Present {

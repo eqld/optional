@@ -14,6 +14,35 @@ func MakeFloat32(value float32) Float32 {
 	return Float32{Value: value, Present: true}
 }
 
+// MakeFloat32FromPtr converts a pointer to float32 to Float32
+func MakeFloat32FromPtr(ptr *float32) Float32 {
+	if ptr == nil {
+		return Float32{}
+	}
+
+	return MakeFloat32(*ptr)
+}
+
+// SafeValue safely converts Float32 to float32 returning its default value if the value of Float32 is not present
+func (o Float32) SafeValue() (value float32) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Float32 to a pointer to float32 returning nil pointer if the value of Float32 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Float32
+func (o Float32) SafePtr() (ptr *float32) {
+	if o.Present {
+		ptr = new(float32)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Float32 to json
 func (o Float32) MarshalJSON() ([]byte, error) {
 	if !o.Present {

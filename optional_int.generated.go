@@ -14,6 +14,35 @@ func MakeInt(value int) Int {
 	return Int{Value: value, Present: true}
 }
 
+// MakeIntFromPtr converts a pointer to int to Int
+func MakeIntFromPtr(ptr *int) Int {
+	if ptr == nil {
+		return Int{}
+	}
+
+	return MakeInt(*ptr)
+}
+
+// SafeValue safely converts Int to int returning its default value if the value of Int is not present
+func (o Int) SafeValue() (value int) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Int to a pointer to int returning nil pointer if the value of Int is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Int
+func (o Int) SafePtr() (ptr *int) {
+	if o.Present {
+		ptr = new(int)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Int to json
 func (o Int) MarshalJSON() ([]byte, error) {
 	if !o.Present {

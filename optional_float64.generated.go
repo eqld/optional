@@ -14,6 +14,35 @@ func MakeFloat64(value float64) Float64 {
 	return Float64{Value: value, Present: true}
 }
 
+// MakeFloat64FromPtr converts a pointer to float64 to Float64
+func MakeFloat64FromPtr(ptr *float64) Float64 {
+	if ptr == nil {
+		return Float64{}
+	}
+
+	return MakeFloat64(*ptr)
+}
+
+// SafeValue safely converts Float64 to float64 returning its default value if the value of Float64 is not present
+func (o Float64) SafeValue() (value float64) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Float64 to a pointer to float64 returning nil pointer if the value of Float64 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Float64
+func (o Float64) SafePtr() (ptr *float64) {
+	if o.Present {
+		ptr = new(float64)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Float64 to json
 func (o Float64) MarshalJSON() ([]byte, error) {
 	if !o.Present {

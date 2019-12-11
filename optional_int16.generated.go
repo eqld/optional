@@ -14,6 +14,35 @@ func MakeInt16(value int16) Int16 {
 	return Int16{Value: value, Present: true}
 }
 
+// MakeInt16FromPtr converts a pointer to int16 to Int16
+func MakeInt16FromPtr(ptr *int16) Int16 {
+	if ptr == nil {
+		return Int16{}
+	}
+
+	return MakeInt16(*ptr)
+}
+
+// SafeValue safely converts Int16 to int16 returning its default value if the value of Int16 is not present
+func (o Int16) SafeValue() (value int16) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Int16 to a pointer to int16 returning nil pointer if the value of Int16 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Int16
+func (o Int16) SafePtr() (ptr *int16) {
+	if o.Present {
+		ptr = new(int16)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Int16 to json
 func (o Int16) MarshalJSON() ([]byte, error) {
 	if !o.Present {

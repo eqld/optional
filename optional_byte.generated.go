@@ -14,6 +14,35 @@ func MakeByte(value byte) Byte {
 	return Byte{Value: value, Present: true}
 }
 
+// MakeByteFromPtr converts a pointer to byte to Byte
+func MakeByteFromPtr(ptr *byte) Byte {
+	if ptr == nil {
+		return Byte{}
+	}
+
+	return MakeByte(*ptr)
+}
+
+// SafeValue safely converts Byte to byte returning its default value if the value of Byte is not present
+func (o Byte) SafeValue() (value byte) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Byte to a pointer to byte returning nil pointer if the value of Byte is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Byte
+func (o Byte) SafePtr() (ptr *byte) {
+	if o.Present {
+		ptr = new(byte)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Byte to json
 func (o Byte) MarshalJSON() ([]byte, error) {
 	if !o.Present {

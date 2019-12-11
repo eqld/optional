@@ -14,6 +14,35 @@ func MakeUint16(value uint16) Uint16 {
 	return Uint16{Value: value, Present: true}
 }
 
+// MakeUint16FromPtr converts a pointer to uint16 to Uint16
+func MakeUint16FromPtr(ptr *uint16) Uint16 {
+	if ptr == nil {
+		return Uint16{}
+	}
+
+	return MakeUint16(*ptr)
+}
+
+// SafeValue safely converts Uint16 to uint16 returning its default value if the value of Uint16 is not present
+func (o Uint16) SafeValue() (value uint16) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Uint16 to a pointer to uint16 returning nil pointer if the value of Uint16 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Uint16
+func (o Uint16) SafePtr() (ptr *uint16) {
+	if o.Present {
+		ptr = new(uint16)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Uint16 to json
 func (o Uint16) MarshalJSON() ([]byte, error) {
 	if !o.Present {

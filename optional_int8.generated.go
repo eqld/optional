@@ -14,6 +14,35 @@ func MakeInt8(value int8) Int8 {
 	return Int8{Value: value, Present: true}
 }
 
+// MakeInt8FromPtr converts a pointer to int8 to Int8
+func MakeInt8FromPtr(ptr *int8) Int8 {
+	if ptr == nil {
+		return Int8{}
+	}
+
+	return MakeInt8(*ptr)
+}
+
+// SafeValue safely converts Int8 to int8 returning its default value if the value of Int8 is not present
+func (o Int8) SafeValue() (value int8) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Int8 to a pointer to int8 returning nil pointer if the value of Int8 is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Int8
+func (o Int8) SafePtr() (ptr *int8) {
+	if o.Present {
+		ptr = new(int8)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Int8 to json
 func (o Int8) MarshalJSON() ([]byte, error) {
 	if !o.Present {

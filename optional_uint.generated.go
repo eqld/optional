@@ -14,6 +14,35 @@ func MakeUint(value uint) Uint {
 	return Uint{Value: value, Present: true}
 }
 
+// MakeUintFromPtr converts a pointer to uint to Uint
+func MakeUintFromPtr(ptr *uint) Uint {
+	if ptr == nil {
+		return Uint{}
+	}
+
+	return MakeUint(*ptr)
+}
+
+// SafeValue safely converts Uint to uint returning its default value if the value of Uint is not present
+func (o Uint) SafeValue() (value uint) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Uint to a pointer to uint returning nil pointer if the value of Uint is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Uint
+func (o Uint) SafePtr() (ptr *uint) {
+	if o.Present {
+		ptr = new(uint)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Uint to json
 func (o Uint) MarshalJSON() ([]byte, error) {
 	if !o.Present {

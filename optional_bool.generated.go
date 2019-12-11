@@ -14,6 +14,35 @@ func MakeBool(value bool) Bool {
 	return Bool{Value: value, Present: true}
 }
 
+// MakeBoolFromPtr converts a pointer to bool to Bool
+func MakeBoolFromPtr(ptr *bool) Bool {
+	if ptr == nil {
+		return Bool{}
+	}
+
+	return MakeBool(*ptr)
+}
+
+// SafeValue safely converts Bool to bool returning its default value if the value of Bool is not present
+func (o Bool) SafeValue() (value bool) {
+	if o.Present {
+		value = o.Value
+	}
+
+	return
+}
+
+// SafePtr safely converts Bool to a pointer to bool returning nil pointer if the value of Bool is not present;
+// the pointer, if not nil, DOES NOT point to the underlying value of Bool
+func (o Bool) SafePtr() (ptr *bool) {
+	if o.Present {
+		ptr = new(bool)
+		*ptr = o.Value
+	}
+
+	return
+}
+
 // MarshalJSON marshals Bool to json
 func (o Bool) MarshalJSON() ([]byte, error) {
 	if !o.Present {
