@@ -97,6 +97,106 @@ func (o Uint) SafePtrWithErr() (ptr *uint, err error) {
 	return
 }
 
+// Equals returns true if both values are not present or both values are present and are equal according to a provided determinant.
+func (o Uint) Equals(other Uint, determinant func(this, other uint) bool) bool {
+	return (!o.Present && !other.Present) || (o.Present && other.Present && determinant(o.Value, other.Value))
+}
+
+// Compare returns a result of provided comparator and true if both values are present, otherwise it returns 0 and false.
+func (o Uint) Compare(other Uint, comparator func(this, other uint) int) (int, bool) {
+	if !o.Present || !other.Present {
+		return 0, false
+	}
+
+	return comparator(o.Value, other.Value), true
+}
+
+// Filter returns the Uint if its value is present and it matches the given predicate, otherwise it returns an empty Uint.
+func (o Uint) Filter(test func(value uint) bool) (result Uint) {
+	if !o.Present || !test(o.Value) {
+		return
+	}
+
+	return o
+}
+
+// Map applies the provided mapping function to a value and returns its result as Uint if the value is present,
+// otherwise is returns an empty Uint.
+func (o Uint) Map(mapper func(value uint) (result uint, present bool)) (result Uint) {
+	if !o.Present {
+		return
+	}
+
+	result.Value, result.Present = mapper(o.Value)
+
+	return
+}
+
+// IfPresent invokes the specified action with the value if it is present.
+func (o Uint) IfPresent(action func(value uint)) {
+	if o.Present {
+		action(o.Value)
+	}
+}
+
+// OrElse returns the value if it is present, otherwise it returns given other value.
+func (o Uint) OrElse(other uint) uint {
+	if !o.Present {
+		return other
+	}
+
+	return o.Value
+}
+
+// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// and the flag set to false.
+func (o Uint) OrElseFlag(other uint) (uint, bool) {
+	if !o.Present {
+		return other, false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// and non-nil error.
+func (o Uint) OrElseErr(other uint) (uint, error) {
+	if !o.Present {
+		return other, errors.New("value of optional.Uint is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseGet returns the value if it is present, otherwise it invokes a supplier and returns a result of that invocation.
+func (o Uint) OrElseGet(supplier func() uint) uint {
+	if !o.Present {
+		return supplier()
+	}
+
+	return o.Value
+}
+
+// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// a result of that invocation with a flag set to false.
+func (o Uint) OrElseGetFlag(supplier func() uint) (result uint, ok bool) {
+	if !o.Present {
+		return supplier(), false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// a result of that invocation with non-nil error.
+func (o Uint) OrElseGetErr(supplier func() uint) (result uint, err error) {
+	if !o.Present {
+		return supplier(), errors.New("value of optional.Uint is not present")
+	}
+
+	return o.Value, nil
+}
+
 // MarshalJSON marshals Uint to json.
 func (o Uint) MarshalJSON() ([]byte, error) {
 	if !o.Present {

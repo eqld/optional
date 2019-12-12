@@ -97,6 +97,106 @@ func (o String) SafePtrWithErr() (ptr *string, err error) {
 	return
 }
 
+// Equals returns true if both values are not present or both values are present and are equal according to a provided determinant.
+func (o String) Equals(other String, determinant func(this, other string) bool) bool {
+	return (!o.Present && !other.Present) || (o.Present && other.Present && determinant(o.Value, other.Value))
+}
+
+// Compare returns a result of provided comparator and true if both values are present, otherwise it returns 0 and false.
+func (o String) Compare(other String, comparator func(this, other string) int) (int, bool) {
+	if !o.Present || !other.Present {
+		return 0, false
+	}
+
+	return comparator(o.Value, other.Value), true
+}
+
+// Filter returns the String if its value is present and it matches the given predicate, otherwise it returns an empty String.
+func (o String) Filter(test func(value string) bool) (result String) {
+	if !o.Present || !test(o.Value) {
+		return
+	}
+
+	return o
+}
+
+// Map applies the provided mapping function to a value and returns its result as String if the value is present,
+// otherwise is returns an empty String.
+func (o String) Map(mapper func(value string) (result string, present bool)) (result String) {
+	if !o.Present {
+		return
+	}
+
+	result.Value, result.Present = mapper(o.Value)
+
+	return
+}
+
+// IfPresent invokes the specified action with the value if it is present.
+func (o String) IfPresent(action func(value string)) {
+	if o.Present {
+		action(o.Value)
+	}
+}
+
+// OrElse returns the value if it is present, otherwise it returns given other value.
+func (o String) OrElse(other string) string {
+	if !o.Present {
+		return other
+	}
+
+	return o.Value
+}
+
+// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// and the flag set to false.
+func (o String) OrElseFlag(other string) (string, bool) {
+	if !o.Present {
+		return other, false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// and non-nil error.
+func (o String) OrElseErr(other string) (string, error) {
+	if !o.Present {
+		return other, errors.New("value of optional.String is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseGet returns the value if it is present, otherwise it invokes a supplier and returns a result of that invocation.
+func (o String) OrElseGet(supplier func() string) string {
+	if !o.Present {
+		return supplier()
+	}
+
+	return o.Value
+}
+
+// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// a result of that invocation with a flag set to false.
+func (o String) OrElseGetFlag(supplier func() string) (result string, ok bool) {
+	if !o.Present {
+		return supplier(), false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// a result of that invocation with non-nil error.
+func (o String) OrElseGetErr(supplier func() string) (result string, err error) {
+	if !o.Present {
+		return supplier(), errors.New("value of optional.String is not present")
+	}
+
+	return o.Value, nil
+}
+
 // MarshalJSON marshals String to json.
 func (o String) MarshalJSON() ([]byte, error) {
 	if !o.Present {

@@ -97,6 +97,106 @@ func (o Int8) SafePtrWithErr() (ptr *int8, err error) {
 	return
 }
 
+// Equals returns true if both values are not present or both values are present and are equal according to a provided determinant.
+func (o Int8) Equals(other Int8, determinant func(this, other int8) bool) bool {
+	return (!o.Present && !other.Present) || (o.Present && other.Present && determinant(o.Value, other.Value))
+}
+
+// Compare returns a result of provided comparator and true if both values are present, otherwise it returns 0 and false.
+func (o Int8) Compare(other Int8, comparator func(this, other int8) int) (int, bool) {
+	if !o.Present || !other.Present {
+		return 0, false
+	}
+
+	return comparator(o.Value, other.Value), true
+}
+
+// Filter returns the Int8 if its value is present and it matches the given predicate, otherwise it returns an empty Int8.
+func (o Int8) Filter(test func(value int8) bool) (result Int8) {
+	if !o.Present || !test(o.Value) {
+		return
+	}
+
+	return o
+}
+
+// Map applies the provided mapping function to a value and returns its result as Int8 if the value is present,
+// otherwise is returns an empty Int8.
+func (o Int8) Map(mapper func(value int8) (result int8, present bool)) (result Int8) {
+	if !o.Present {
+		return
+	}
+
+	result.Value, result.Present = mapper(o.Value)
+
+	return
+}
+
+// IfPresent invokes the specified action with the value if it is present.
+func (o Int8) IfPresent(action func(value int8)) {
+	if o.Present {
+		action(o.Value)
+	}
+}
+
+// OrElse returns the value if it is present, otherwise it returns given other value.
+func (o Int8) OrElse(other int8) int8 {
+	if !o.Present {
+		return other
+	}
+
+	return o.Value
+}
+
+// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// and the flag set to false.
+func (o Int8) OrElseFlag(other int8) (int8, bool) {
+	if !o.Present {
+		return other, false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// and non-nil error.
+func (o Int8) OrElseErr(other int8) (int8, error) {
+	if !o.Present {
+		return other, errors.New("value of optional.Int8 is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseGet returns the value if it is present, otherwise it invokes a supplier and returns a result of that invocation.
+func (o Int8) OrElseGet(supplier func() int8) int8 {
+	if !o.Present {
+		return supplier()
+	}
+
+	return o.Value
+}
+
+// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// a result of that invocation with a flag set to false.
+func (o Int8) OrElseGetFlag(supplier func() int8) (result int8, ok bool) {
+	if !o.Present {
+		return supplier(), false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// a result of that invocation with non-nil error.
+func (o Int8) OrElseGetErr(supplier func() int8) (result int8, err error) {
+	if !o.Present {
+		return supplier(), errors.New("value of optional.Int8 is not present")
+	}
+
+	return o.Value, nil
+}
+
 // MarshalJSON marshals Int8 to json.
 func (o Int8) MarshalJSON() ([]byte, error) {
 	if !o.Present {

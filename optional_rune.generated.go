@@ -97,6 +97,106 @@ func (o Rune) SafePtrWithErr() (ptr *rune, err error) {
 	return
 }
 
+// Equals returns true if both values are not present or both values are present and are equal according to a provided determinant.
+func (o Rune) Equals(other Rune, determinant func(this, other rune) bool) bool {
+	return (!o.Present && !other.Present) || (o.Present && other.Present && determinant(o.Value, other.Value))
+}
+
+// Compare returns a result of provided comparator and true if both values are present, otherwise it returns 0 and false.
+func (o Rune) Compare(other Rune, comparator func(this, other rune) int) (int, bool) {
+	if !o.Present || !other.Present {
+		return 0, false
+	}
+
+	return comparator(o.Value, other.Value), true
+}
+
+// Filter returns the Rune if its value is present and it matches the given predicate, otherwise it returns an empty Rune.
+func (o Rune) Filter(test func(value rune) bool) (result Rune) {
+	if !o.Present || !test(o.Value) {
+		return
+	}
+
+	return o
+}
+
+// Map applies the provided mapping function to a value and returns its result as Rune if the value is present,
+// otherwise is returns an empty Rune.
+func (o Rune) Map(mapper func(value rune) (result rune, present bool)) (result Rune) {
+	if !o.Present {
+		return
+	}
+
+	result.Value, result.Present = mapper(o.Value)
+
+	return
+}
+
+// IfPresent invokes the specified action with the value if it is present.
+func (o Rune) IfPresent(action func(value rune)) {
+	if o.Present {
+		action(o.Value)
+	}
+}
+
+// OrElse returns the value if it is present, otherwise it returns given other value.
+func (o Rune) OrElse(other rune) rune {
+	if !o.Present {
+		return other
+	}
+
+	return o.Value
+}
+
+// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// and the flag set to false.
+func (o Rune) OrElseFlag(other rune) (rune, bool) {
+	if !o.Present {
+		return other, false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// and non-nil error.
+func (o Rune) OrElseErr(other rune) (rune, error) {
+	if !o.Present {
+		return other, errors.New("value of optional.Rune is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseGet returns the value if it is present, otherwise it invokes a supplier and returns a result of that invocation.
+func (o Rune) OrElseGet(supplier func() rune) rune {
+	if !o.Present {
+		return supplier()
+	}
+
+	return o.Value
+}
+
+// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// a result of that invocation with a flag set to false.
+func (o Rune) OrElseGetFlag(supplier func() rune) (result rune, ok bool) {
+	if !o.Present {
+		return supplier(), false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// a result of that invocation with non-nil error.
+func (o Rune) OrElseGetErr(supplier func() rune) (result rune, err error) {
+	if !o.Present {
+		return supplier(), errors.New("value of optional.Rune is not present")
+	}
+
+	return o.Value, nil
+}
+
 // MarshalJSON marshals Rune to json.
 func (o Rune) MarshalJSON() ([]byte, error) {
 	if !o.Present {

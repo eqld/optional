@@ -97,6 +97,106 @@ func (o Int32) SafePtrWithErr() (ptr *int32, err error) {
 	return
 }
 
+// Equals returns true if both values are not present or both values are present and are equal according to a provided determinant.
+func (o Int32) Equals(other Int32, determinant func(this, other int32) bool) bool {
+	return (!o.Present && !other.Present) || (o.Present && other.Present && determinant(o.Value, other.Value))
+}
+
+// Compare returns a result of provided comparator and true if both values are present, otherwise it returns 0 and false.
+func (o Int32) Compare(other Int32, comparator func(this, other int32) int) (int, bool) {
+	if !o.Present || !other.Present {
+		return 0, false
+	}
+
+	return comparator(o.Value, other.Value), true
+}
+
+// Filter returns the Int32 if its value is present and it matches the given predicate, otherwise it returns an empty Int32.
+func (o Int32) Filter(test func(value int32) bool) (result Int32) {
+	if !o.Present || !test(o.Value) {
+		return
+	}
+
+	return o
+}
+
+// Map applies the provided mapping function to a value and returns its result as Int32 if the value is present,
+// otherwise is returns an empty Int32.
+func (o Int32) Map(mapper func(value int32) (result int32, present bool)) (result Int32) {
+	if !o.Present {
+		return
+	}
+
+	result.Value, result.Present = mapper(o.Value)
+
+	return
+}
+
+// IfPresent invokes the specified action with the value if it is present.
+func (o Int32) IfPresent(action func(value int32)) {
+	if o.Present {
+		action(o.Value)
+	}
+}
+
+// OrElse returns the value if it is present, otherwise it returns given other value.
+func (o Int32) OrElse(other int32) int32 {
+	if !o.Present {
+		return other
+	}
+
+	return o.Value
+}
+
+// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// and the flag set to false.
+func (o Int32) OrElseFlag(other int32) (int32, bool) {
+	if !o.Present {
+		return other, false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// and non-nil error.
+func (o Int32) OrElseErr(other int32) (int32, error) {
+	if !o.Present {
+		return other, errors.New("value of optional.Int32 is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseGet returns the value if it is present, otherwise it invokes a supplier and returns a result of that invocation.
+func (o Int32) OrElseGet(supplier func() int32) int32 {
+	if !o.Present {
+		return supplier()
+	}
+
+	return o.Value
+}
+
+// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// a result of that invocation with a flag set to false.
+func (o Int32) OrElseGetFlag(supplier func() int32) (result int32, ok bool) {
+	if !o.Present {
+		return supplier(), false
+	}
+
+	return o.Value, o.Present
+}
+
+// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// a result of that invocation with non-nil error.
+func (o Int32) OrElseGetErr(supplier func() int32) (result int32, err error) {
+	if !o.Present {
+		return supplier(), errors.New("value of optional.Int32 is not present")
+	}
+
+	return o.Value, nil
+}
+
 // MarshalJSON marshals Int32 to json.
 func (o Int32) MarshalJSON() ([]byte, error) {
 	if !o.Present {
