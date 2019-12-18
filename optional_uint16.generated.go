@@ -148,9 +148,9 @@ func (o Uint16) OrElse(other uint16) uint16 {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o Uint16) OrElseFlag(other uint16) (uint16, bool) {
+func (o Uint16) OrElseWithFlag(other uint16) (uint16, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -158,9 +158,9 @@ func (o Uint16) OrElseFlag(other uint16) (uint16, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o Uint16) OrElseErr(other uint16) (uint16, error) {
+func (o Uint16) OrElseWithErr(other uint16) (uint16, error) {
 	if !o.Present {
 		return other, errors.New("value of optional.Uint16 is not present")
 	}
@@ -177,9 +177,9 @@ func (o Uint16) OrElseGet(supplier func() uint16) uint16 {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o Uint16) OrElseGetFlag(supplier func() uint16) (result uint16, ok bool) {
+func (o Uint16) OrElseGetWithFlag(supplier func() uint16) (result uint16, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -187,11 +187,22 @@ func (o Uint16) OrElseGetFlag(supplier func() uint16) (result uint16, ok bool) {
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o Uint16) OrElseGetErr(supplier func() uint16) (result uint16, err error) {
+func (o Uint16) OrElseGetWithErr(supplier func() uint16) (result uint16, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of optional.Uint16 is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o Uint16) OrElseErr(errSupplier func() error) (result uint16, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil

@@ -150,9 +150,9 @@ func (o _TO_) OrElse(other _T_) _T_ {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o _TO_) OrElseFlag(other _T_) (_T_, bool) {
+func (o _TO_) OrElseWithFlag(other _T_) (_T_, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -160,9 +160,9 @@ func (o _TO_) OrElseFlag(other _T_) (_T_, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o _TO_) OrElseErr(other _T_) (_T_, error) {
+func (o _TO_) OrElseWithErr(other _T_) (_T_, error) {
 	if !o.Present {
 		return other, errors.New("value of _PKG_._TO_ is not present")
 	}
@@ -179,9 +179,9 @@ func (o _TO_) OrElseGet(supplier func() _T_) _T_ {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o _TO_) OrElseGetFlag(supplier func() _T_) (result _T_, ok bool) {
+func (o _TO_) OrElseGetWithFlag(supplier func() _T_) (result _T_, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -189,11 +189,22 @@ func (o _TO_) OrElseGetFlag(supplier func() _T_) (result _T_, ok bool) {
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o _TO_) OrElseGetErr(supplier func() _T_) (result _T_, err error) {
+func (o _TO_) OrElseGetWithErr(supplier func() _T_) (result _T_, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of _PKG_._TO_ is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o _TO_) OrElseErr(errSupplier func() error) (result _T_, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil

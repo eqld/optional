@@ -148,9 +148,9 @@ func (o Complex128) OrElse(other complex128) complex128 {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o Complex128) OrElseFlag(other complex128) (complex128, bool) {
+func (o Complex128) OrElseWithFlag(other complex128) (complex128, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -158,9 +158,9 @@ func (o Complex128) OrElseFlag(other complex128) (complex128, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o Complex128) OrElseErr(other complex128) (complex128, error) {
+func (o Complex128) OrElseWithErr(other complex128) (complex128, error) {
 	if !o.Present {
 		return other, errors.New("value of optional.Complex128 is not present")
 	}
@@ -177,9 +177,9 @@ func (o Complex128) OrElseGet(supplier func() complex128) complex128 {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o Complex128) OrElseGetFlag(supplier func() complex128) (result complex128, ok bool) {
+func (o Complex128) OrElseGetWithFlag(supplier func() complex128) (result complex128, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -187,11 +187,22 @@ func (o Complex128) OrElseGetFlag(supplier func() complex128) (result complex128
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o Complex128) OrElseGetErr(supplier func() complex128) (result complex128, err error) {
+func (o Complex128) OrElseGetWithErr(supplier func() complex128) (result complex128, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of optional.Complex128 is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o Complex128) OrElseErr(errSupplier func() error) (result complex128, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil

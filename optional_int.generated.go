@@ -148,9 +148,9 @@ func (o Int) OrElse(other int) int {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o Int) OrElseFlag(other int) (int, bool) {
+func (o Int) OrElseWithFlag(other int) (int, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -158,9 +158,9 @@ func (o Int) OrElseFlag(other int) (int, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o Int) OrElseErr(other int) (int, error) {
+func (o Int) OrElseWithErr(other int) (int, error) {
 	if !o.Present {
 		return other, errors.New("value of optional.Int is not present")
 	}
@@ -177,9 +177,9 @@ func (o Int) OrElseGet(supplier func() int) int {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o Int) OrElseGetFlag(supplier func() int) (result int, ok bool) {
+func (o Int) OrElseGetWithFlag(supplier func() int) (result int, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -187,11 +187,22 @@ func (o Int) OrElseGetFlag(supplier func() int) (result int, ok bool) {
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o Int) OrElseGetErr(supplier func() int) (result int, err error) {
+func (o Int) OrElseGetWithErr(supplier func() int) (result int, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of optional.Int is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o Int) OrElseErr(errSupplier func() error) (result int, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil

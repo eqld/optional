@@ -148,9 +148,9 @@ func (o Rune) OrElse(other rune) rune {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o Rune) OrElseFlag(other rune) (rune, bool) {
+func (o Rune) OrElseWithFlag(other rune) (rune, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -158,9 +158,9 @@ func (o Rune) OrElseFlag(other rune) (rune, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o Rune) OrElseErr(other rune) (rune, error) {
+func (o Rune) OrElseWithErr(other rune) (rune, error) {
 	if !o.Present {
 		return other, errors.New("value of optional.Rune is not present")
 	}
@@ -177,9 +177,9 @@ func (o Rune) OrElseGet(supplier func() rune) rune {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o Rune) OrElseGetFlag(supplier func() rune) (result rune, ok bool) {
+func (o Rune) OrElseGetWithFlag(supplier func() rune) (result rune, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -187,11 +187,22 @@ func (o Rune) OrElseGetFlag(supplier func() rune) (result rune, ok bool) {
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o Rune) OrElseGetErr(supplier func() rune) (result rune, err error) {
+func (o Rune) OrElseGetWithErr(supplier func() rune) (result rune, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of optional.Rune is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o Rune) OrElseErr(errSupplier func() error) (result rune, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil

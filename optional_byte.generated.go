@@ -148,9 +148,9 @@ func (o Byte) OrElse(other byte) byte {
 	return o.Value
 }
 
-// OrElseFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
+// OrElseWithFlag returns the value if it is present with a flag set to true, otherwise it returns given other value
 // and the flag set to false.
-func (o Byte) OrElseFlag(other byte) (byte, bool) {
+func (o Byte) OrElseWithFlag(other byte) (byte, bool) {
 	if !o.Present {
 		return other, false
 	}
@@ -158,9 +158,9 @@ func (o Byte) OrElseFlag(other byte) (byte, bool) {
 	return o.Value, o.Present
 }
 
-// OrElseErr returns the value if it is present with nil error, otherwise it returns given other value
+// OrElseWithErr returns the value if it is present with nil error, otherwise it returns given other value
 // and non-nil error.
-func (o Byte) OrElseErr(other byte) (byte, error) {
+func (o Byte) OrElseWithErr(other byte) (byte, error) {
 	if !o.Present {
 		return other, errors.New("value of optional.Byte is not present")
 	}
@@ -177,9 +177,9 @@ func (o Byte) OrElseGet(supplier func() byte) byte {
 	return o.Value
 }
 
-// OrElseGetFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
+// OrElseGetWithFlag returns the value if it is present with a flag set to true, otherwise it invokes a supplier and returns
 // a result of that invocation with a flag set to false.
-func (o Byte) OrElseGetFlag(supplier func() byte) (result byte, ok bool) {
+func (o Byte) OrElseGetWithFlag(supplier func() byte) (result byte, ok bool) {
 	if !o.Present {
 		return supplier(), false
 	}
@@ -187,11 +187,22 @@ func (o Byte) OrElseGetFlag(supplier func() byte) (result byte, ok bool) {
 	return o.Value, o.Present
 }
 
-// OrElseGetErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
+// OrElseGetWithErr returns the value if it is present with nil error, otherwise it invokes a supplier and returns
 // a result of that invocation with non-nil error.
-func (o Byte) OrElseGetErr(supplier func() byte) (result byte, err error) {
+func (o Byte) OrElseGetWithErr(supplier func() byte) (result byte, err error) {
 	if !o.Present {
 		return supplier(), errors.New("value of optional.Byte is not present")
+	}
+
+	return o.Value, nil
+}
+
+// OrElseErr returns the value if it is present with nil error, otherwise it invokes an error supplier and returns
+// default value and an error returned by the error supplier.
+func (o Byte) OrElseErr(errSupplier func() error) (result byte, err error) {
+	if !o.Present {
+		err = errSupplier()
+		return
 	}
 
 	return o.Value, nil
